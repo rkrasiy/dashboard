@@ -1,0 +1,78 @@
+.Menu {
+  width: 200px;
+  display: flex;
+  align-items: baseline;
+  height: 100%;
+}
+.Menu > .item {
+  padding: 0.5em;
+  width: 100%;
+  text-align: left;
+  box-sizing: border-box;
+  position: relative;
+  border: 1px solid #fff;
+  border-right: 1px solid white;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: OpenSansLight;
+}
+.Menu .active.item{
+  border-color:#dadada;  
+  font-family: OpenSansSemiBold;
+}
+.Menu .active.item:after {
+  content: "";
+  position: absolute;
+  background: #ffffff;
+  display: block;
+  z-index: 22;
+}
+@media screen and (min-width: 769px) {
+  .Menu {
+    width: 200px;
+    border-right: 1px solid #dadada;
+    padding: 0 0 .5em 1em;
+    flex-direction: column;
+  }
+  .Menu > .item {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+  }
+  .Menu .active.item:after {
+    top: -1px;
+    bottom: -1px;
+    right: -2px;
+    width: 3px;
+    z-index: 22;
+    border-bottom: 1px solid #dadada;
+    border-top: 1px solid #dadada;
+  }
+  .Menu .item.active {
+    border-right-color:white;
+  }
+}
+@media screen and (max-width: 768px) {
+  .Menu {
+    width: 100%;
+    padding: 0;
+    flex-direction: row;
+    border-bottom: 1px solid #dadada;
+  }
+  .Menu .item {
+    border-bottom: 1px solid #fff;
+    border-bottom-color: #fff;
+  }
+  .Menu .active.item:after {
+    bottom: -2px;
+    left: -1px;
+    right: -1px;
+    width: auto;
+    height: 2px;
+    border-left: 1px solid #dadada;
+    box-shadow: 0px 1px 2px 1px #ffffff;
+    border-right: 1px solid #dadada;
+  }
+  .Menu .item.active {
+    border-bottom-color: #fff;
+  }
+}

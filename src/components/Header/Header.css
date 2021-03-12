@@ -1,0 +1,40 @@
+.Header{
+    background-color: #282c34;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+  .Header{
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .Header .column{
+    height: inherit;
+    align-items: center;
+      display: flex;
+  }
+
+  .Header .logo{
+   height: inherit;
+  }
+  .Header nav > a{
+    display: block;
+    font-size: 12px;
+    color: #282c34;
+    border: 1px solid #dadada;
+    padding: 2px 5px;
+    background: #dadada;
+    border-radius: 2px;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 5px;
+    text-transform: uppercase;
+  }
+  .Header nav {
+    display: flex;
+  }

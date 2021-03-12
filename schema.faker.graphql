@@ -1,0 +1,31 @@
+type Product{
+  id: ID!
+  name: String! @fake(type: productName)
+  category: Category
+  company: Company
+  price: Int! @fake (type: money)
+  units: Int! @fake (type: number)
+  distributor: Distributor
+  body: String @fake(type: lorem, options: {loremSize: paragraph})
+}
+
+type Category {
+  id: ID!
+  name: String!@fake(type: productCategory)
+}
+
+type Company {
+  id: ID!
+  name: String!@fake(type: companyName)
+}
+
+type Query{
+  products: [Product]
+}
+
+type Distributor{
+  id: ID!
+  name: String! @fake(type: companyName)
+  tel_number: Int!@fake (type: phoneNumber)
+  email: String!@fake (type: email)
+}

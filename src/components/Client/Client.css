@@ -1,0 +1,45 @@
+.Client{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+}
+.client-view > * {
+  margin: 0;
+}
+
+.client-view {
+  width: 100%;
+  text-align: left;
+}
+p.user.name{
+  width: 100%;
+}
+a.phone-number,a.email {
+  display: inline-block;
+  font-size: 13px;
+  color: #707070;
+  text-decoration: none;
+}
+
+.client-view a.phone-number {
+  margin: 0 1em;
+}
+@media screen and (min-width: 769px) {
+  .Client {
+    flex-direction: row;
+  }
+  .controls{
+    display: flex;
+  }
+}
+@media screen and (max-width: 768px) {
+  .Client {
+    flex-direction: column;
+  }
+  .controls {
+    width: 100%;
+    text-align: right;
+    margin:1em 0;
+  }
+}

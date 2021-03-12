@@ -1,0 +1,24 @@
+.Footer {
+  background-color: #282c34;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+.Footer {
+  flex-direction: column;
+  font-size: calc(10px + 1.3vmin);
+}
+.Footer .row {
+  max-width: 1200px;
+  width: 100%;
+}
+.Footer a {
+  color: #f6f6f6;
+  text-decoration: none;
+}
+.Footer a:hover {
+  color: lightblue;
+}

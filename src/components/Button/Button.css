@@ -1,0 +1,56 @@
+.Button{
+    background-color: #dadada;
+    border: 1px solid lightblue;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin: 2px 5px;
+    font-size: inherit;
+}
+.Button:hover{
+    background-color: rgb(173, 216, 230);
+    box-shadow: 1px 0 9px rgba(100, 165, 187, 0.2);
+}
+.Button:disabled{
+    cursor: not-allowed;
+}
+.Button.red {
+    color: #fff;
+    background-color: var(--red);
+    border-color: var(--red-hover);
+}
+.Button.red:hover{
+    background-color: var(--red-hover);
+}
+.Button.blue {
+    color: #fff;
+    background-color: var(--blue);
+    border-color: var(--blue-hover);
+}
+.Button.blue:hover{
+    background-color: var(--blue-hover);
+}
+
+.Button.green {
+    color: #fff;
+    background-color: var(--green);
+    border-color: var(--green-hover);
+}
+.Button.green:hover{
+    background-color: var(--green-hover);
+}
+.Button.fullwidth {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+}
+:root{
+    --red: rgb(251, 41, 41);
+    --red-hover: rgb(223, 41, 41);
+
+    --blue: rgb(38, 142, 226 );
+    --blue-hover: rgb(42, 159, 254 );
+
+    --green: rgb(37, 180, 49);
+    --green-hover: rgb(28, 156, 39);
+
+}

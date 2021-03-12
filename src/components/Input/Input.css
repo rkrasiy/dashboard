@@ -1,0 +1,29 @@
+.Input {
+    padding: .5rem 0 0;
+    margin-bottom: 1em;
+}
+.Input input {
+    padding: .3rem .6rem;
+    border: 1px solid lightblue;
+    border-radius: .3rem;
+    outline: none;
+    font-size: inherit;
+    font-family: inherit;
+}
+input.invalid{
+    border: 1px solid red;
+    background-color: #fda49a;
+}
+.Input input:focus{
+    background-color: #f6f6f6;
+}
+.Input > label{
+    margin-bottom: .5rem;
+    display: block;
+    width: 100%;
+    text-align: left;
+}
+.errorMessage {
+    color: red;
+    margin: 5px 0;
+}

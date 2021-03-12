@@ -9,12 +9,17 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "json-server": "json-server --watch ./src/db.json --port 3030",
+    "graphql-server": "graphql-faker --open --port 3031",
+    "dev": "concurrently \"npm start\" \"npm run json-server\" \"npm run graphql-server\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
     "concurrently": "^6.0.0",
-    "json-server": "^0.16.3"
+    "graphql-server": "^0.3.2",
+    "json-server": "^0.16.3",
+    "web-vitals": "^1.1.0"
   }
 }
