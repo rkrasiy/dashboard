@@ -114,7 +114,7 @@ class Clients extends Component {
         }
       }
       title = "Editar: " + person.name
-      btn = "Editar"
+      btn = "Guardar"
     }else{
       for(let key in formData){
         formData[key].value = ""
@@ -133,7 +133,7 @@ class Clients extends Component {
 
   closeModalHandler = () => {
     const updateControls = form.clearInputs(this.state.controls)
-    this.setState({ openModal: false});
+    this.setState({ openModal: false, updateControls});
   }
 
   inputHandler = (event, controlName) => {

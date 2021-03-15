@@ -22,6 +22,7 @@ class App extends Component {
         <div className="App">
           <Header 
             isAuth={this.props.isAuthenticated}
+            userName={this.props.userName}
           />
           <main>
           <Switch>
@@ -43,7 +44,8 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    isAuthenticated: state.auth.userId !== null
+    isAuthenticated: state.auth.userId !== null,
+    userName : state.auth.userName 
   }
 }
 

@@ -1,31 +1,45 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
 type Product{
   id: ID!
   name: String! @fake(type: productName)
-  category: Category
-  company: Company
+  category: String! @fake(type:productCategory)
+  company: String! @fake(type:companyName)
   price: Int! @fake (type: money)
   units: Int! @fake (type: number)
-  distributor: Distributor
+  distributor: String! @fake(type: companyBS )
   body: String @fake(type: lorem, options: {loremSize: paragraph})
 }
 
-type Category {
+type NewProduct{
   id: ID!
-  name: String!@fake(type: productCategory)
-}
-
-type Company {
-  id: ID!
-  name: String!@fake(type: companyName)
+  name: String!
+  category: String!
+  company: String!
+  price: Int!
+  units: Int!
+  distributor: String!
+  body: String
 }
 
 type Query{
-  products: [Product]
+  products (name: [String]): [Product]
+  newProducts (name: [String]): [NewProduct]
 }
 
-type Distributor{
-  id: ID!
-  name: String! @fake(type: companyName)
-  tel_number: Int!@fake (type: phoneNumber)
-  email: String!@fake (type: email)
+type Mutation{
+  createNewProduct (newProducts: [newProductInput]): [NewProduct]
+}
+
+input newProductInput {
+  name: String!
+  category: String!
+  company: String!
+  price: Int!
+  units: Int!
+  distributor: String!
+  body: String!
 }

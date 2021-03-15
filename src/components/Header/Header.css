@@ -16,7 +16,7 @@
   .Header .column{
     height: inherit;
     align-items: center;
-      display: flex;
+    display: flex;
   }
 
   .Header .logo{
@@ -37,4 +37,9 @@
   }
   .Header nav {
     display: flex;
+    align-items: center;
+  }
+  .user-name{
+    margin: 0 1em 0;
+    font-size: 12px;
   }

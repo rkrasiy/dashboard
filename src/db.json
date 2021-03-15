@@ -27,6 +27,13 @@
       "email": "test@test.com",
       "phone_number": "321321421",
       "id": 6
+    },
+    {
+      "name": "Jose",
+      "last_name": "Ortaz",
+      "email": "joseortaz@gmail.com",
+      "phone_number": "782123181",
+      "id": 7
     }
   ],
   "products": [

@@ -69,7 +69,6 @@ class Auth extends Component{
     }
 
     inputChangedHandler = (event, controlName) => {
-        //console.log(event.target.value)
         const updateControls = {
             ...this.state.controls,
             [controlName]: {
@@ -79,17 +78,6 @@ class Auth extends Component{
                 touched: true
             }
         }
-        /*const updateFormElement = {...updateControls[id]}
-        updateFormElement.value = event.target.value;
-
-        updateFormElement.valid = this.checkValidaty( updateFormElement.value, updateFormElement.validation)
-        updateFormElement.touched = true;
-        updateControls[id] = updateFormElement;
-
-        let isSignup = true;
-        for(let inputIdentifiers in updateControls){
-            isSignup = updateControls[inputIdentifiers].valid && isSignup
-        }*/
         this.setState({controls: updateControls})
     }
 
@@ -135,7 +123,7 @@ class Auth extends Component{
                 <h4 className="title">¡Bienvenido!</h4>
                   {form} 
                 {errorMessage}
-                <Button btnType="Success" classes="blue fullwidth">Submit</Button>
+                <Button btnType="Success" classes="blue fullwidth">Entrar</Button>
                 </form>
             </div>
         )

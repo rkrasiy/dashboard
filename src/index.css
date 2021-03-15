@@ -38,8 +38,13 @@ i.icon:after{
   width: 12px;
   height: 12px;
   background-repeat: no-repeat;
-  background-size: 11px 11px;
+  background-size: 11px;
   background-position: center;
+}
+.big.icon:after{
+  width: 22px;
+  height: 22px;
+  background-size: 18px;
 }
 i.icon.user:after{
   content:"";
@@ -53,6 +58,18 @@ i.icon.email:after{
   content:"";
   background-image: url(../src/assets/icons/envelope.svg);
 }
+i.user:after{
+  content: "";
+  background-image: url(../src/assets/icons/user.svg);
+}
+.inverted{
+  filter: invert(1);
+}
+.circle i:after {
+  border-radius: 50%;
+  border: 2px solid #000;
+}
+
 @media screen and (-webkit-min-device-pixel-ratio:0) { 
   select,
   textarea,
