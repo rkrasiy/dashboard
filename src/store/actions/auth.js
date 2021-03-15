@@ -1,54 +1,55 @@
 import * as actionTypes from "./actionTypes"
-import * as db from "../../db_config"
+import axios from "axios"
+
 export const authStart = () => {
   return {
     type: actionTypes.AUTH_START
   }
 }
 
-export const authSuccess = (authData) => {
+export const authSuccess = (name, userId, token) => {
   return {
     type: actionTypes.AUTH_SUCCESS,
-    authData: authData
+    userName: name,
+    idToken: token,
+    userId: userId
   }
 }
+
 export const authFail = (error) => {
   return {
     type: actionTypes.AUTH_FAIL,
     error: error
   }
 }
-
-export const auth = (email, password) => {
+export const logout = () => {
+  return {
+    type: actionTypes.AUTH_LOGOUT
+  }
+}
+export const checkAuthTimeout = (expirationTime) =>{
+return dispatch => {
+  setTimeout(()=>{
+    dispatch(logout())
+  },expirationTime * 1000)
+}
+}
+export const auth = (name, password, isSignup) => {
   return dispatch => {
     dispatch(authStart());
-    const authData = {
-      email: email,
-      password: password,
-      returnSecureToken: true
-    }
-   /* axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCPD9QmL-6q2JWOIsgTs0cyNZGZCUsoUMI",
-    authData).then(response => {
-      console.log(response)
-      dispatch(authSuccess(response.data))
-    }).catch(err => {
-      console.log(err)
-      dispatch(authFail())
-    })*/
-
-    fetch(db.URL + "/admin", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json; charset=UTF-8", // Indicates the content
-      },
-      body: authData,
-    }).then(response => {
-      console.log(response)
-      dispatch(authSuccess(response.data))
-    }).catch(err => {
-      console.log(err)
-      dispatch(authFail())
-    })
-      .catch((err) => console.log(err));
-  };
+    let url = `http://localhost:3030/admin?user=${name}&password=${password}`
+    axios.get(url)
+      .then(response => {
+        if(response.data && response.data.length > 0){
+          console.log(response)
+          dispatch(authSuccess(response.data[0].user, response.data[0].id, "token"))
+          dispatch(checkAuthTimeout(3600))
+        }else{
+          dispatch(authFail("El nombre de usuario o la contraseña son incorrectos"))
+        }
+      }).catch(err => {
+        console.log(err.response)
+        dispatch(authFail(err))
+      })
+  }
 }

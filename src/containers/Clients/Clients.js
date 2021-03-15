@@ -1,9 +1,10 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import Client from "../../components/Client/Client";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import * as form from "../../store/form"
-import * as db from "../../db_config"
+import * as server from "../../server"
 
 class Clients extends Component {
   state = {
@@ -76,7 +77,10 @@ class Clients extends Component {
   };
 
   componentDidMount = () => {
-    fetch(db.URL + "/clients")
+    
+    console.log(this.props)
+    console.log("componentDidMount")
+    fetch(server.URL + "/clients")
       .then((response) => {
         return response.json();
       })
@@ -87,7 +91,14 @@ class Clients extends Component {
         console.log(err.message);
       });
   };
-
+  componentDidUpdate = () =>{
+    console.log("componentDidUpdate")
+  }
+  shouldComponentUpdate = (prevState, nextState) => {
+    console.log("ShouldComonentUpdate")
+    return true
+  }
+  
   openModalHandler = (event, id) => {
     let formData = {...this.state.controls}
     let title = "Nuevo Cliente"
@@ -132,7 +143,7 @@ class Clients extends Component {
   addNewClientHandler = (event, id) => {
     event.preventDefault();
     let formData = [];
-    let url = db.URL + "/clients";
+    let url = server.URL + "/clients";
     let method = "POST";
     let formIsValid = true;
     const controls = {...this.state.controls}
@@ -271,7 +282,7 @@ class Clients extends Component {
         </div>
       );
     }
-
+    
     return (
       <div className="Clients">
         <div className="row right">
@@ -284,8 +295,23 @@ class Clients extends Component {
           {itemsCount}
         </div>
         {modal}
+        <p>{this.props.newClient}</p>
+        <button onClick={this.props.onAddClient}>Click</button>
       </div>
     );
   }
 }
-export default Clients;
+
+const mapStateToProps = (state) => {
+  return {
+    isAuthenticated: state.auth.userId !== null
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+      onAddClient: () => dispatch({type: "ADD"})
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Clients);

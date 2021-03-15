@@ -1,3 +1,4 @@
-export {
-  auth
+export {  
+  auth,
+  logout
 } from "./auth"
