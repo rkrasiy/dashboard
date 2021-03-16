@@ -13,7 +13,6 @@ export const fetchUserStart = ( state, action ) => {
 
 export const fetchUserSuccess = ( state, action ) => {
   return updateObject( state, {
-    clients: state.clients.concat( action.clients ),
     loading: false
   });
 }
@@ -25,36 +24,42 @@ export const fetchUserFail = ( state, action ) => {
   });
 }
 
-const clearStore = (state, action) => {
+export const userCreate = ( state, action ) => {
   return updateObject( state, {
-    clients: []
+    clients: state.clients.concat(action.client),
   });
 }
+
 export const userEdit = ( state, action ) => {
-  let users = [...state.clients]
-  let indexUser = users.findIndex( user => user.id === action.data.id)
-  users[indexUser] = action.data
+  let clients = [...state.clients]
+  let indexUser = clients.findIndex( user => user.id === action.data.id)
+  clients[indexUser] = action.data
   return updateObject( state, {
-    clients: users,
-    loading: false
+    clients: clients
   });
 }
 
 export const userRemoved = ( state, action ) => {
-  let users = [...state.clients]
-  let indexUser = users.findIndex( user => user.id === action.removedId)
-  users.splice(indexUser, 1)
+  let clients = [...state.clients]
+  let indexUser = clients.findIndex( user => user.id === action.removedId)
+  clients.splice(indexUser, 1)
   return updateObject( state, {
-    clients: users,
-    loading: false
+    clients: clients
   } );
 };
+
+export const allUsers = ( state, action ) => {
+  return updateObject( state, {
+    clients: action.clients,
+  });
+}
 
 const reducer = ( state = initialState, action ) => {
   switch ( action.type ) {
       case actionTypes.USER_REMOVED: return userRemoved( state, action );
       case actionTypes.USER_EDIT: return userEdit( state, action );
-      case actionTypes.USER_CLEAR_STORE: return clearStore( state, action );
+      case actionTypes.USER_CREATE: return userCreate( state, action );
+      case actionTypes.ALL_USERS: return allUsers( state, action );
       case actionTypes.FETCH_USER_START: return fetchUserStart( state, action );
       case actionTypes.FETCH_USER_SUCCESS: return fetchUserSuccess( state, action );
       case actionTypes.FETCH_USER_FAIL: return fetchUserFail( state, action );

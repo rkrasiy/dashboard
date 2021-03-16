@@ -78,7 +78,7 @@ class Clients extends Component {
 
   componentDidMount = () => {
     if(this.props.isAuth)
-      this.props.allUsers("clients")
+      this.props.onFetchAll("clients")
   };
   
   openModalHandler = (event, id) => {
@@ -156,15 +156,15 @@ class Clients extends Component {
     };
 
     if(!!id){
-      this.props.editUser(newPerson, "clients", id)
+      this.props.onFetchUserEdit(newPerson, "clients", id)
     }else{
-      this.props.createUser(newPerson, "clients")
+      this.props.onFetchUserCreate(newPerson, "clients")
     }
     this.closeModalHandler()
   };
 
   removeClientHadler = (id) => {
-    this.props.removeUser("clients",id)
+    this.props.onFetchUserRemove("clients",id)
   };
   
   render() {
@@ -177,7 +177,6 @@ class Clients extends Component {
       authRedirect = <Redirect to="/" exact/>
     }
     if (!!this.props.clients) {
-
       itemsCount = "Total: " + this.props.clients.length + " clientes";
       persons = this.props.clients.map((person, index) => (
         <Client
@@ -260,10 +259,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-      allUsers: (collection) => dispatch(actions.fetchAll(collection)),
-      createUser: (data, collection) => dispatch(actions.fetchUserCreate(data, collection)),
-      removeUser: (collection, id) => dispatch( actions.fetchUserRemove( collection, id)),
-      editUser: (data, collection, id) => dispatch (actions.fetchUserEdit(data, collection, id))
+      onFetchAll: (collection) => dispatch(actions.fetchAll(collection)),
+      onFetchUserCreate: (data, collection) => dispatch(actions.fetchUserCreate(data, collection)),
+      onFetchUserRemove: (collection, id) => dispatch( actions.fetchUserRemove( collection, id)),
+      onFetchUserEdit: (data, collection, id) => dispatch (actions.fetchUserEdit(data, collection, id))
     }
 }
 
