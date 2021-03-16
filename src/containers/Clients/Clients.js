@@ -3,12 +3,12 @@ import { connect } from "react-redux";
 import Client from "../../components/Client/Client";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
+import { Redirect } from "react-router-dom";
 import * as form from "../../store/form"
-import * as server from "../../server"
+import * as actions from "../../store/actions/index";
 
 class Clients extends Component {
   state = {
-    clientes: null,
     openModal: false,
     controls: {
       name: {
@@ -77,34 +77,16 @@ class Clients extends Component {
   };
 
   componentDidMount = () => {
-    
-    console.log(this.props)
-    console.log("componentDidMount")
-    fetch(server.URL + "/clients")
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        this.setState({ clientes: data });
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+    if(this.props.isAuth)
+      this.props.allUsers("clients")
   };
-  componentDidUpdate = () =>{
-    console.log("componentDidUpdate")
-  }
-  shouldComponentUpdate = (prevState, nextState) => {
-    console.log("ShouldComonentUpdate")
-    return true
-  }
   
   openModalHandler = (event, id) => {
     let formData = {...this.state.controls}
     let title = "Nuevo Cliente"
     let btn = "Crear Nuevo Cliente"
     if(!!id){
-      let persons = [ ...this.state.clientes];
+      let persons = [ ...this.props.clients];
       let personIndex = persons.findIndex((person) => person.id === id);
       let person = {...persons[personIndex]};
 
@@ -143,15 +125,8 @@ class Clients extends Component {
   addNewClientHandler = (event, id) => {
     event.preventDefault();
     let formData = [];
-    let url = server.URL + "/clients";
-    let method = "POST";
-    let formIsValid = true;
     const controls = {...this.state.controls}
-    if(!!id){
-      url += "/" + id
-      method = "PUT"
-    }
-    
+    let formIsValid = true;
     for(let formElement in controls){
       if(controls[formElement].valid){
           formData[formElement] = controls[formElement] 
@@ -173,8 +148,6 @@ class Clients extends Component {
         userData: formData
     }
     
-    let persons = [...this.state.clientes];
-
     let newPerson = {
       name: order.userData.name.value,
       last_name:  order.userData.last_name.value,
@@ -182,54 +155,31 @@ class Clients extends Component {
       phone_number: order.userData.phone_number.value
     };
 
-    fetch(url, {
-      method: method,
-      headers: {
-        "Content-type": "application/json; charset=UTF-8", // Indicates the content
-      },
-      body: JSON.stringify(newPerson),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        let index = persons.findIndex( person => person.id === data.id)
-        if(index !== -1){
-          persons[index] = data
-        }else{
-          persons.push(data);
-        }
-        this.setState({ clientes: persons,openModal: false });
-      })
-      .catch((err) => console.log(err));
+    if(!!id){
+      this.props.editUser(newPerson, "clients", id)
+    }else{
+      this.props.createUser(newPerson, "clients")
+    }
+    this.closeModalHandler()
   };
 
   removeClientHadler = (id) => {
-    let persons = [...this.state.clientes];
-    let personIndex = persons.findIndex((person) => person.id === id);
-    persons.splice(personIndex, 1);
-
-    fetch("http://localhost:3030/clients/" + id, {
-      method: "DELETE",
-    })
-      .then((response) => {
-        response.json();
-        if (response.status === 200) {
-          this.setState({ clientes: persons });
-        }
-      })
-    
-      .catch((err) => console.log(err));
+    this.props.removeUser("clients",id)
   };
   
   render() {
+    let authRedirect = null;
     let persons = "";
     let itemsCount = 0;
     let modal = "";
     let personId = this.state.personId;
+    if(!this.props.isAuth){
+      authRedirect = <Redirect to="/" exact/>
+    }
+    if (!!this.props.clients) {
 
-    if (!!this.state.clientes) {
-
-      itemsCount = "Total: " + this.state.clientes.length + " clientes";
-      persons = this.state.clientes.map((person, index) => (
+      itemsCount = "Total: " + this.props.clients.length + " clientes";
+      persons = this.props.clients.map((person, index) => (
         <Client
           key={person.id}
           name={person.name}
@@ -285,6 +235,7 @@ class Clients extends Component {
     
     return (
       <div className="Clients">
+        {authRedirect}
         <div className="row right">
           <Button classes="green" clicked={(event) =>this.openModalHandler(event)}>
             Nuevo Cliente
@@ -295,8 +246,6 @@ class Clients extends Component {
           {itemsCount}
         </div>
         {modal}
-        <p>{this.props.newClient}</p>
-        <button onClick={this.props.onAddClient}>Click</button>
       </div>
     );
   }
@@ -304,13 +253,17 @@ class Clients extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.userId !== null
+    clients: state.user.clients,
+    isAuth: state.auth.userId !== null,
   };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-      onAddClient: () => dispatch({type: "ADD"})
+      allUsers: (collection) => dispatch(actions.fetchAll(collection)),
+      createUser: (data, collection) => dispatch(actions.fetchUserCreate(data, collection)),
+      removeUser: (collection, id) => dispatch( actions.fetchUserRemove( collection, id)),
+      editUser: (data, collection, id) => dispatch (actions.fetchUserEdit(data, collection, id))
     }
 }
 

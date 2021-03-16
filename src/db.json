@@ -22,18 +22,11 @@
       "id": 3
     },
     {
-      "name": "Testing",
-      "last_name": "Second-Name",
-      "email": "test@test.com",
-      "phone_number": "321321421",
-      "id": 6
-    },
-    {
-      "name": "Jose",
-      "last_name": "Ortaz",
-      "email": "joseortaz@gmail.com",
-      "phone_number": "782123181",
-      "id": 7
+      "name": "Ruslan",
+      "last_name": "Krasiy",
+      "email": "krasiyruslan@gmail.com",
+      "phone_number": "123123123",
+      "id": 4
     }
   ],
   "products": [

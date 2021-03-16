@@ -1,5 +1,5 @@
 import * as actionTypes from "./actionTypes"
-import axios from "axios"
+import axios from "../../server"
 
 export const authStart = () => {
   return {
@@ -28,20 +28,19 @@ export const logout = () => {
   }
 }
 export const checkAuthTimeout = (expirationTime) =>{
-return dispatch => {
-  setTimeout(()=>{
-    dispatch(logout())
-  },expirationTime * 1000)
-}
+  return dispatch => {
+    setTimeout(()=>{
+      dispatch(logout())
+    },expirationTime * 1000)
+  }
 }
 export const auth = (name, password, isSignup) => {
   return dispatch => {
     dispatch(authStart());
-    let url = `http://localhost:3030/admin?user=${name}&password=${password}`
+    let url = `/admin?user=${name}&password=${password}`
     axios.get(url)
       .then(response => {
         if(response.data && response.data.length > 0){
-          console.log(response)
           dispatch(authSuccess(response.data[0].user, response.data[0].id, "token"))
           dispatch(checkAuthTimeout(3600))
         }else{
