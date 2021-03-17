@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import * as actions from "../store/actions/index";
 
 import "./App.css";
 import Footer from "../components/Footer/Footer";
@@ -9,15 +10,11 @@ import Auth from "./Auth/Auth";
 import Header from "../components/Header/Header";
 import Logout from "../containers/Auth/Logout/Logout"
 class App extends Component {
+  componentDidMount(){
+    this.props.onTryAutoSign()
+  }
   render() {
-    
-    /*let main = null;
-    if (!this.state.isLogged)
-      main = <Content />
-    else
-      main = <Auth isLogged={this.state.isLogged} />
-   */
-  
+ 
     return (
         <div className="App">
           <Header 
@@ -26,9 +23,10 @@ class App extends Component {
           />
           <main>
           <Switch>
-            <Route path="/dashboard" exact component={Content} />
-            <Route path="/logout" exact component={Logout} />
+            <Route path="/dashboard" component={Content} />
+            <Route path="/logout" component={Logout} />
             <Route path="/" exact component={Auth} />
+            <Redirect to="/" />
           </Switch>
           </main>
           <Footer
@@ -45,8 +43,12 @@ class App extends Component {
 const mapStateToProps = state => {
   return {
     isAuthenticated: state.auth.userId !== null,
-    userName : state.auth.userName 
+    userName : state.auth.userName
   }
 }
-
-export default connect( mapStateToProps)(App);
+const mapDispatchToProps = dispatch => {
+  return {
+    onTryAutoSign: () => dispatch(actions.authCheckState())
+  }
+}
+export default withRouter(connect( mapStateToProps, mapDispatchToProps)(App));
