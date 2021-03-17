@@ -7,6 +7,7 @@ import Button from "../../components/Button/Button";
 import Spinner from "../../components/Spinner/Spinner"
 
 import "./Auth.css";
+import { updateObject, inputChanged} from "../../shared/utility"
 import * as actions from "../../store/actions/index";
 
 class Auth extends Component{
@@ -43,25 +44,7 @@ class Auth extends Component{
         },
         isSignup: false
     }
-    checkValidaty = ( value, rules ) => {
-        let isValid = true;
-
-        if(rules.required) {
-            isValid = value.trim() !== "" && isValid;
-        }
-        if(rules.minLength){
-            isValid = value.length >= rules.minLength && isValid
-        }
-        if(rules.maxLength){
-            isValid = value.length <= rules.maxLength && isValid
-        }
-        if(rules.isEmail){
-            const pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-            isValid = pattern.test(value) && isValid
-        }
-
-        return isValid
-    }
+    
     submitHandler = (event) =>{
         event.preventDefault();
         this.props.onAuth( this.state.controls.name.value,this.state.controls.password.value,this.state.isSignup)
@@ -69,15 +52,7 @@ class Auth extends Component{
     }
 
     inputChangedHandler = (event, controlName) => {
-        const updateControls = {
-            ...this.state.controls,
-            [controlName]: {
-                ...this.state.controls[controlName],
-                value: event.target.value,
-                valid: this.checkValidaty(event.target.value, this.state.controls[controlName].validation),
-                touched: true
-            }
-        }
+        const updateControls = inputChanged(this.state.controls, controlName, event.target.value)
         this.setState({controls: updateControls})
     }
 

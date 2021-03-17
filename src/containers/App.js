@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import * as actions from "../store/actions/index";
 
 import "./App.css";
 import Footer from "../components/Footer/Footer";
 import Content from "./Content/Content";
 import Auth from "./Auth/Auth";
 import Header from "../components/Header/Header";
-import Logout from "../containers/Auth/Logout/Logout"
+import Logout from "../containers/Auth/Logout/Logout";
+import * as actions from "../store/actions/index";
+
 class App extends Component {
   componentDidMount(){
     this.props.onTryAutoSign()

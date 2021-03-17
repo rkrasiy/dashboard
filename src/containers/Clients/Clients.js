@@ -4,8 +4,9 @@ import Client from "../../components/Client/Client";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import { Redirect } from "react-router-dom";
-import * as form from "../../store/form"
+
 import * as actions from "../../store/actions/index";
+import { updateObject, checkValidaty, inputChanged, clearInputs} from "../../shared/utility"
 
 class Clients extends Component {
   state = {
@@ -114,12 +115,12 @@ class Clients extends Component {
   };
 
   closeModalHandler = () => {
-    const updateControls = form.clearInputs(this.state.controls)
+    const updateControls = clearInputs(this.state.controls)
     this.setState({ openModal: false, updateControls});
   }
 
-  inputHandler = (event, controlName) => {
-    const updateControls = form.inputChangedHandler(this.state.controls, controlName, event.target.value)
+  inputChangedHandler = (event, controlName) => {
+    const updateControls = inputChanged(this.state.controls, controlName, event.target.value)
     this.setState({controls: updateControls})
   }
   addNewClientHandler = (event, id) => {
@@ -131,7 +132,7 @@ class Clients extends Component {
       if(controls[formElement].valid){
           formData[formElement] = controls[formElement] 
       }else if(!controls[formElement].valid){
-        formIsValid = form.checkValidaty(controls[formElement].value, controls[formElement].validation)
+        formIsValid = checkValidaty(controls[formElement].value, controls[formElement].validation)
         if(formIsValid){
           formData[formElement] = controls[formElement] 
         }else{
@@ -209,7 +210,7 @@ class Clients extends Component {
           invalid={!formElement.config.valid}
           shouldValidate={formElement.config.validation}
           touched={formElement.config.touched}
-          changed={(event) => this.inputHandler(event, formElement.id)}
+          changed={(event) => this.inputChangedHandler(event, formElement.id)}
         />
       ));
 
