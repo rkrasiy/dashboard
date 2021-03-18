@@ -1,8 +1,12 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+
 import Menu from "../../components/Menu/Menu";
 import Clients from "../Clients/Clients";
 import Products from "../Products/Products"
 import "./Content.css";
+
 
 class Content extends Component {
   state = {
@@ -36,13 +40,17 @@ class Content extends Component {
  
   render() {
     let contentList = "";
-
+    let authRedirect = null;
+    if(!this.props.isAuth){
+      authRedirect = <Redirect to="/" exact/>
+    }
     if(this.state.menu[0].active)
       contentList = <Clients />
     if(this.state.menu[1].active)
       contentList = <Products />
     return (
       <div className="Content">
+        {authRedirect}
         <aside>
           <Menu 
             child={this.state.menu} 
@@ -56,5 +64,10 @@ class Content extends Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    isAuth: state.auth.userId !== null,
+  };
+};
 
-export default Content;
+export default connect(mapStateToProps)(Content);

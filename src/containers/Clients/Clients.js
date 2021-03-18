@@ -3,10 +3,9 @@ import { connect } from "react-redux";
 import Client from "../../components/Client/Client";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
-import { Redirect } from "react-router-dom";
 
 import * as actions from "../../store/actions/index";
-import { updateObject, checkValidaty, inputChanged, clearInputs} from "../../shared/utility"
+import { checkValidaty, inputChanged, clearInputs} from "../../shared/utility"
 
 class Clients extends Component {
   state = {
@@ -169,14 +168,11 @@ class Clients extends Component {
   };
   
   render() {
-    let authRedirect = null;
     let persons = "";
     let itemsCount = 0;
     let modal = "";
     let personId = this.state.personId;
-    if(!this.props.isAuth){
-      authRedirect = <Redirect to="/" exact/>
-    }
+
     if (!!this.props.clients) {
       itemsCount = "Total: " + this.props.clients.length + " clientes";
       persons = this.props.clients.map((person, index) => (
@@ -235,7 +231,6 @@ class Clients extends Component {
     
     return (
       <div className="Clients">
-        {authRedirect}
         <div className="row right">
           <Button classes="green" clicked={(event) =>this.openModalHandler(event)}>
             Nuevo Cliente
