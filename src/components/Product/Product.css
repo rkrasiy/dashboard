@@ -4,3 +4,6 @@
   align-items: center;
   padding: 2px 5px;
 }
+.price-striked{
+  text-decoration: line-through;
+}

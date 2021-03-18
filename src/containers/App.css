@@ -57,12 +57,15 @@ main {
 form{
   background-color: #fff;
   display: flex;
-  font-size: 1.3em;
+  font-size: 1em;
   flex-direction: column;
   box-sizing: border-box;
   padding: 1em;
   border-radius: .3rem;
   box-shadow: 1px 0 9px rgba(112,112,112, .2);
+}
+form .Input + button {
+  margin-top: 1em;
 }
 @media screen and (min-width: 769px) {
   .list-items{

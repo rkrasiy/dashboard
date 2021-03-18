@@ -3,6 +3,7 @@ import "./Input.css";
 
 
 const input = (props) => {
+    console.log(props)
     let inputElement = null;
     const inputClasses = ["rk-input"]
     

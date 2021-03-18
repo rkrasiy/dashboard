@@ -25,11 +25,11 @@
 .message-error{
   font-size: 15px;
   color: red;
-  margin-top: 0;
-  margin-bottom: 2em;
+  margin: 1em 0;
   max-width: 336px;
   text-align: center;
 }
+
 @media screen and (max-width: 768px){
   .Auth form{
     font-size: 22px;

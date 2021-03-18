@@ -4,6 +4,8 @@ import Client from "../../components/Client/Client";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 
+import Spinner from "../../components/Spinner/Spinner"
+
 import * as actions from "../../store/actions/index";
 import { checkValidaty, inputChanged, clearInputs} from "../../shared/utility"
 
@@ -188,6 +190,10 @@ class Clients extends Component {
       ));
     }
 
+    if(this.props.loading){
+      persons = <Spinner/>
+    }
+
     if (!!this.state.openModal) {
       const formElementsArray = [];
       for (let key in this.state.controls) {
@@ -248,6 +254,7 @@ class Clients extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    loading: state.user.loading,
     clients: state.user.clients,
     isAuth: state.auth.userId !== null,
   };

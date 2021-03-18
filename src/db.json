@@ -27,32 +27,65 @@
       "email": "romanchyklesia@gmail.com",
       "phone_number": "654658488",
       "id": 4
+    },
+    {
+      "name": "Lesia",
+      "last_name": "Romanchuk",
+      "email": "romanchyklesia@gmail.com",
+      "phone_number": "123123123",
+      "id": 5
     }
   ],
   "products": [
     {
-      "id": 1,
-      "title": "phone",
-      "companyName": "samsung",
-      "price": "350",
-      "offer": true,
-      "offer_prop": 20
+      "title": "Iphone 8PLUS",
+      "company": "Apple",
+      "price": "987.45",
+      "stock": "10",
+      "category": "phone",
+      "discount": "20",
+      "model": "Galaxy",
+      "id": 1
     },
     {
-      "id": 2,
-      "title": "Printer",
-      "companyName": "HP",
+      "title": "Impresora",
+      "company": "HP",
       "price": "70",
-      "offer": false,
-      "offer_prop": 0
+      "stock": "5",
+      "category": "printer",
+      "discount": "25",
+      "model": "4557H",
+      "id": 2
     },
     {
       "id": 3,
-      "title": "Computer",
-      "companyName": "Dell",
+      "title": "Computer Dell",
+      "company": "Dell",
+      "category": "desktop",
       "price": "1200",
-      "offer": false,
-      "offer_prop": 0
+      "discount": "5",
+      "stock": "7",
+      "model": "8w3A"
+    },
+    {
+      "title": "Ipod",
+      "company": "Apple",
+      "price": "672",
+      "stock": "123",
+      "category": "tablet",
+      "discount": "0",
+      "model": "PRO",
+      "id": 4
+    },
+    {
+      "title": "test",
+      "company": "ASD",
+      "price": "2222",
+      "stock": "111",
+      "category": "SOME",
+      "discount": "0",
+      "model": "QQWE",
+      "id": 5
     }
   ],
   "admin": [

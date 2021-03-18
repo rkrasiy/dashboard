@@ -10,11 +10,13 @@ import App from './containers/App';
 import reportWebVitals from './reportWebVitals';
 import authReducer from "./store/reducers/auth";
 import userReducer from "./store/reducers/user";
+import productReducer from "./store/reducers/product";
 
 const composeEnhancers = process.env.NODE_ENV === "development" ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
 const rootReducer = combineReducers({
   auth: authReducer,
-  user: userReducer
+  user: userReducer,
+  product: productReducer
 })
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
 
