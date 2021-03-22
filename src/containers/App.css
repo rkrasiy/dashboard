@@ -17,6 +17,9 @@ main {
   display: block;
 }
 
+.center{
+  text-align: center;
+}
 .right{
   text-align: right;
 }
@@ -24,19 +27,18 @@ main {
   display: block;
   width: 100%;
 }
-.list-items{
- /* max-height: 70vh;
-  overflow: auto;*/
-}
+
 .top{
   margin-bottom: auto;
 }
-.list-items > div:nth-child(even){
-  background-color: #fff;
-}
-.list-items > div:nth-child(odd){
+
+.list-items > div{
+  border:1px solid #e9e9e9;
   background-color: #f6f6f6;
-}
+  border-radius: 5px;
+  padding: 7px;
+  margin: 5px 0;
+} 
 .title {
   font-family: OpenSansSemiBold;
   font-size: 1em;
@@ -70,10 +72,23 @@ form .Input + button {
 @media screen and (min-width: 769px) {
   .list-items{
     padding: 1em;
+    max-height: 650px;
+    overflow: auto;
+  }
+  form{
+    width: 350px;
   }
 }
 @media screen and (max-width: 768px) {
   .list-items {
     padding: 1em 0;
+  }
+  form{
+    width: 60%;
+  }
+}
+@media screen and (max-width: 425px) {
+  form{
+    width: 90%;
   }
 }

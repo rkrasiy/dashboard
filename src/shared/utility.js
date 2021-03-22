@@ -36,7 +36,8 @@ export const clearInputs = (controls) =>{
   const clearedInputs = {...controls}
   for(let key in clearedInputs){
     clearedInputs[key].value = ""
-    clearedInputs[key].touched = false
+    clearedInputs[key].focused = false
+    clearedInputs[key].valid = false
   }
   return  clearedInputs
 }

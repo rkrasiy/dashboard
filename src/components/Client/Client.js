@@ -26,10 +26,10 @@ const Client = (props) => {
       </div>
       <div className="controls">
         <Button classes="blue" clicked={props.clickedEdit}>
-          Editar
+          <i className="edit-user big inverted icon"></i>Editar
         </Button>
         <Button classes="red" clicked={props.clickedRemove}>
-          Eliminar
+        <i className="trash inverted icon"></i>Eliminar
         </Button>
       </div>
     </div>

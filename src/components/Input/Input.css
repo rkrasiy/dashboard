@@ -8,19 +8,22 @@
     outline: none;
     font-size: inherit;
     font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
 }
 input.invalid{
     border: 1px solid red;
-    background-color: #fda49a;
 }
+
 .Input input:focus{
     background-color: #f6f6f6;
 }
 .Input > label{
-    margin-bottom: .5rem;
+    margin-bottom: .25rem;
     display: block;
     width: 100%;
     text-align: left;
+    font-size: 10px;
 }
 .errorMessage {
     color: red;

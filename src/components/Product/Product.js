@@ -6,58 +6,63 @@ const Product = (props) => {
     price,
     company,
     discount,
-    stock,category,model = null;
-  
+    stock,model = null;
+  let classes = ["Product"]
+  if(props.classes){
+    classes.concat(props.classes)
+  }
   if(props.title){
-    title = (<p className="title">{props.title}</p>)
+    title = (<span className="title">{props.title}</span>)
   }
-  
+  if(props.model){
+    model = (<span className="model">{props.model}</span>)
+  }
   if(props.company){
-    company = (<p className="company-name">{props.company}</p>)
+    company = (<span className="company-name">{props.company}</span>)
   }
-  if(props.discount && props.price != "0" ){
+  if(props.discount && props.discount !== "0" ){
     let oldPrice = Number(props.price);
     let newPrice = oldPrice - (oldPrice / 100) * Number(props.discount)
 
     discount =  (
-      <div>
+      <div className="discount-cont">
         <span className="price-striked">{oldPrice}€</span>
-        <span className="price">{(newPrice.toFixed(2))}€</span>
         <span className="discount">{props.discount}%</span>
+        <span className="price">{(newPrice.toFixed(2))}€</span>
       </div>
     )
   }else if(props.price){
-      price = (<p className="price">{props.price}€</p>)
+      price = (<span className="price">{props.price}€</span>)
   }
-
   if(props.stock){
-    stock = (<p className="units">{props.stock}</p>)
+    stock = (<span className="units">Stock ({props.stock})</span>)
   }
-  if(props.category){
-    category = (<p className="category">{props.category}</p>)
-  }
-  if(props.model){
-    model = (<p className="model">{props.model}</p>)
-  }
+ 
+  
 
   return (
-      <div className="Product">
+      <div className={classes.join(" ")}>
         <div className="product-view">
-          {title}
-          {price}
-          {discount}
-          {company}
-          {model}
-          {category}
-          {stock}
+          <div className="main-content">
+            {title}
+            {model}
+            {company}
           </div>
+          <div className="supp-info">
+            {price}
+            {discount}
+            {stock}
+          </div>
+        </div>
         <div className="controls">
           <Button 
             classes="blue" 
-            clicked={props.clickedEdit}>Editar</Button>
+            clicked={props.clickedEdit}>
+              <i className="edit big inverted icon"></i>Editar</Button>
           <Button 
             classes="red" 
-            clicked={props.clickedRemove}>Eliminar</Button>
+            clicked={props.clickedRemove}>
+              <i className="trash inverted icon"></i>Eliminar</Button>
         </div>
       </div>
     );

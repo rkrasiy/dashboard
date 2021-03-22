@@ -11,7 +11,7 @@ import Spinner from "../../components/Spinner/Spinner";
 import * as actions from "../../store/actions/index";
 import { checkValidaty, inputChanged, clearInputs} from "../../shared/utility"
 
-class Products extends Component {
+export class Products extends Component {
   state = {  
     controls: {
       title: {
@@ -26,8 +26,8 @@ class Products extends Component {
           minLength: 3
         },
         valid: false,
-        touched: false,
-        label: "Titulo"
+        focused: false,
+        label: "NOMBRE"
       },
       model: {
         elementType: "input",
@@ -40,14 +40,14 @@ class Products extends Component {
           required: false
         },
         valid: false,
-        touched: false,
-        label: "Modelo"
+        focused: false,
+        label: "MODELO"
       },
       company: {
         elementType: "input",
         elementConfig: {
           type: "text",
-          placeholder: "Samsung",
+          placeholder: "Ej:Samsung, Apple, etc..",
         },
         value: "",
         validation: {
@@ -55,23 +55,8 @@ class Products extends Component {
           minLength: 2,
         },
         valid: false,
-        touched: false,
-        label: "Marca"
-      },
-      category: {
-        elementType: "input",
-        elementConfig: {
-          type: "text",
-          placeholder: "",
-        },
-        value: "",
-        validation: {
-          required: true,
-          minLength: 2,
-        },
-        valid: false,
-        touched: false,
-        label: "Categoría"
+        focused: false,
+        label: "MARCA"
       },
       discount: {
         elementType: "input",
@@ -85,8 +70,8 @@ class Products extends Component {
           maxLength: 2
         },
         valid: false,
-        touched: false,
-        label: "Discuento (%)"
+        focused: false,
+        label: "DESC. (%)"
       },
       price: {
         elementType: "input",
@@ -100,8 +85,8 @@ class Products extends Component {
           isNumber: true
         },
         valid: false,
-        touched: false,
-        label: "Precio"
+        focused: false,
+        label: "PRECIO (€)"
       },
       stock: {
         elementType: "input",
@@ -115,15 +100,21 @@ class Products extends Component {
           minLength: 1,
         },
         valid: false,
-        touched: false,
-        label: "Unidades en stock"
+        focused: false,
+        label: "STOCK (und)"
       },
     },
-    openModal: false,
-    formIsValid: false,
-    formTitle: "Nuevo Articulo",
-    formBtn: "Añadir Articulo",
-    productId: null
+    modal: {
+      open: false,
+      removeConfirm: false,
+      newElement: false
+    },
+    form:{
+      isValid: false,
+      title: "Nuevo Articulo",
+      confirmButton: "Añadir Articulo"
+    },
+    selectedElement: null
   }
   componentDidMount = () => {
     if(this.props.isAuth)
@@ -131,7 +122,10 @@ class Products extends Component {
   }
 
   openModalHandler = (event, id) => {
+    event.preventDefault();
     let formData = {...this.state.controls}
+    let form = {...this.state.form}
+    let modal = {...this.state.modal}
     let title = "Nuevo Articulo"
     let btn = "Añadir Articulo"
     if(!!id){
@@ -152,18 +146,29 @@ class Products extends Component {
       }
     }
     
-    let openModal = this.state.openModal;
+    let openModal = this.state.modal.modal;
+    let newElement = this.state.modal.newElement;
+    form.confirmButton = btn;
+    form.title = title;
+    modal.open = !openModal;
+    modal.newElement = !newElement;
+
     this.setState({ 
-      openModal: !openModal, 
+      modal: modal, 
       controls: formData,
-      formBtn: btn,
-      formTitle: title,
-      productId: id
+      form: form,
+      selectedElement: id
     });
   };
-  closeModalHandler = () => {
+
+  closeModalHandler = (event) => {
+    event.preventDefault();
     const updateControls = clearInputs(this.state.controls)
-    this.setState({ openModal: false, updateControls});
+    let modal = {...this.state.modal}
+    modal.open = false;
+    modal.removeConfirm = false;
+    modal.newElement = false;
+    this.setState( {modal: modal, controls: updateControls})
   }
 
   inputChangedHandler = (event, controlName) => {
@@ -176,22 +181,23 @@ class Products extends Component {
     let formData = [];
     const controls = {...this.state.controls}
     let formIsValid = true;
+    let form = {...this.state.form}
     for(let formElement in controls){
       if(controls[formElement].valid){
           formData[formElement] = controls[formElement] 
       }else if(!controls[formElement].valid){
-        console.log(controls[formElement])
         formIsValid = checkValidaty(controls[formElement].value, controls[formElement].validation)
         if(formIsValid){
           formData[formElement] = controls[formElement] 
         }else{
-          controls[formElement].touched = true
+          controls[formElement].focused = true
         }
       }
     }
 
     if(!formIsValid){
-      return this.setState({formIsValid: formIsValid, controls: controls})
+      form.isValid= formIsValid
+      return this.setState({form: form, controls: controls})
     }
 
     const order = {
@@ -203,7 +209,6 @@ class Products extends Component {
       company:  order.productData.company.value,
       price:  order.productData.price.value,
       stock: order.productData.stock.value,
-      category: order.productData.category.value,
       discount: order.productData.discount.value,
       model: order.productData.model.value
     };
@@ -213,22 +218,32 @@ class Products extends Component {
     }else{
       this.props.onFetchProductCreate(newProduct, "products")
     }
-    this.closeModalHandler()
+    this.closeModalHandler(event)
   };
 
-  removeProductHadler = (id) => {
-    this.props.onFetchProductRemove("products",id)
+  confirmRemoveHandler = (id) => {
+    let modal = {...this.state.modal}
+    modal.open = true;
+    modal.removeConfirm = true;
+    let form = {...this.state.form}
+    form.title = "¿Está seguro que desea eliminar?"
+    form.confirmButton = "Eliminar"
+    this.setState({ modal: modal, selectedElement: id, form: form})
   };
-  
+  removeHandler = (event, id) => {
+    event.preventDefault();
+    this.props.onFetchProductRemove("products",id)
+    this.closeModalHandler(event)
+  }
   render(){
-    let products = "";
+    let productsList= "";
     let itemsCount = 0;
     let modal = "";
-    let productId = this.state.productId;
+    let selectedElement = this.state.selectedElement;
 
-    if(this.props.products && !this.state.openModal){
+    if(this.props.products){
       itemsCount = "Total: " + this.props.products.length + " articulos";
-      products = this.props.products.map( (product, index) => (
+      let products = this.props.products.map( (product, index) => (
         <Product 
           key={product.id} 
           title={product.title}
@@ -237,53 +252,63 @@ class Products extends Component {
           discount={product.discount}
           stock={product.stock}
           model={product.model}
-          category={product.category}
           clickedEdit={(event) =>this.openModalHandler(event, product.id)}
-          clickedRemove={this.removeProductHadler.bind(this, product.id)}
+          clickedRemove={this.confirmRemoveHandler.bind(this, product.id)}
         />
       ))
+      productsList = (<div className="list-items top">{products}</div>)
     }
 
     if(this.props.loading){
-      products = <Spinner/>
+      productsList = <Spinner/>
     }
 
-    if (!!this.state.openModal) {
+    if (this.state.modal.open) {
       const formElementsArray = [];
-      for (let key in this.state.controls) {
-        formElementsArray.push({
-          id: key,
-          config: this.state.controls[key],
-        });
+      let inputs = null;
+      let func
+      if(this.state.modal.newElement){
+        for (let key in this.state.controls) {
+          formElementsArray.push({
+            id: key,
+            config: this.state.controls[key],
+          });
+        }
+        
+         inputs = formElementsArray.map((formElement) => (
+          <Input
+            label={formElement.config.label}
+            key={formElement.id}
+            elementType={formElement.config.elementType}
+            elementConfig={formElement.config.elementConfig}
+            value={formElement.config.value}
+            invalid={!formElement.config.valid}
+            shouldValidate={formElement.config.validation}
+            focused={formElement.config.focused}
+            changed={(event) => this.inputChangedHandler(event, formElement.id)}
+          />
+        ));
       }
-      
-      const form = formElementsArray.map((formElement) => (
-        <Input
-          label={formElement.config.label}
-          key={formElement.id}
-          elementType={formElement.config.elementType}
-          elementConfig={formElement.config.elementConfig}
-          value={formElement.config.value}
-          invalid={!formElement.config.valid}
-          shouldValidate={formElement.config.validation}
-          touched={formElement.config.touched}
-          changed={(event) => this.inputChangedHandler(event, formElement.id)}
-        />
-      ));
+
+      if(this.state.modal.newElement)
+        func = (event) => this.addNewProductHandler(event, selectedElement)
+      else
+        func = (event) => this.removeHandler(event, selectedElement)
 
       modal = (
-        <Modal 
-          submited={(event) => this.addNewProductHandler(event, productId)} 
-          title={this.state.formTitle}>
-          {form}
+        <Modal  
+          title={this.state.form.title}>
+          {inputs}
             <Button 
               btnType="Success" 
-              classes="green fullwidth">{this.state.formBtn}
+              classes="green fullwidth"
+              clicked={func}>
+                {this.state.form.confirmButton}
             </Button>
             <Button 
               btnType="Dismiss" 
               classes="red fullwidth" 
-              clicked={this.closeModalHandler}>Cancelar
+              clicked={(event) => this.closeModalHandler(event)}>Cancelar
             </Button>
         </Modal>
       );
@@ -293,10 +318,10 @@ class Products extends Component {
       <div className="Products">
         <div className="row right">
           <Button classes="green" clicked={(event) =>this.openModalHandler(event)}>
-            Nuevo Articulo
+          <i className="plus inverted icon"></i>Nuevo Articulo
           </Button>
         </div>
-        <div className="list-items top">{products}</div>
+        {productsList}
         <div className="count-elements" style={{ textAlign: "right" }}>
           {itemsCount}
         </div>

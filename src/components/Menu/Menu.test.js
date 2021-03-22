@@ -1,16 +1,23 @@
 import React from 'react';
-import { configure, shallow } from 'enzyme';
-import '@testing-library/jest-dom/extend-expect';
-import Adapter from "enzyme-adapter-react-16";
+import { shallow} from 'enzyme';
 
 import Menu from "./Menu";
 import MenuElement from "./MenuElement/MenuElement";
 
-configure({adapter: new Adapter()})
-
 describe('<Menu />', () => {
-  it('should render one active item on login', () => {
-    const wrapper = shallow(<Menu />)
-    expect(wrapper.find(MenuElement)).toHaveLenth(2)
+  let wrapper
+  beforeEach( () =>{
+    wrapper = shallow(<Menu debug/>)
   })
+
+  it('should render correctly with no props', () => {
+    expect(wrapper).toMatchSnapshot();
+  });
+
+  /*it('should render two <MenuItems /> elements', () => {
+
+    wrapper.setProps({child: child})
+    expect(wrapper.find(MenuElement)).toHaveLength(2);
+  });
+*/
 });

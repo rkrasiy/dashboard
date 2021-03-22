@@ -29,7 +29,11 @@
   max-width: 336px;
   text-align: center;
 }
-
+@media screen and (min-width: 768px){
+  .Auth form{
+    min-width: 390px;
+  }
+}
 @media screen and (max-width: 768px){
   .Auth form{
     font-size: 22px;

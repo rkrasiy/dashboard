@@ -7,10 +7,10 @@ import Button from "../../components/Button/Button";
 import Spinner from "../../components/Spinner/Spinner"
 
 import "./Auth.css";
-import { inputChanged} from "../../shared/utility"
+import { inputChanged } from "../../shared/utility"
 import * as actions from "../../store/actions/index";
 
-class Auth extends Component{
+export class Auth extends Component{
     state = {
         controls: {
             name: {
@@ -25,7 +25,7 @@ class Auth extends Component{
                   minLength: 3,
                 },
                 valid: false,
-                touched: false,
+                focused: false,
               },
             password: {
                 elementType: "input",
@@ -39,21 +39,29 @@ class Auth extends Component{
                     minLength: 4
                 },
                 valid: false,
-                touched: false
+                focused: false
             }
         },
+
         isSignup: false
     }
     
-    submitHandler = (event) =>{
-        event.preventDefault();
-        this.props.onAuth( this.state.controls.name.value,this.state.controls.password.value,this.state.isSignup)
-        
-    }
-
     inputChangedHandler = (event, controlName) => {
         const updateControls = inputChanged(this.state.controls, controlName, event.target.value)
         this.setState({controls: updateControls})
+    }
+    clickHandler = (event) =>{
+        event.preventDefault();
+        let updateControls = {};
+        for(let key in this.state.controls){
+            updateControls = inputChanged(this.state.controls, key, this.state.controls[key].value)
+            if(!updateControls[key].valid){
+                updateControls[key].focused = true
+                return this.setState({controls: updateControls})
+            }
+        }
+
+        this.props.onAuth( this.state.controls.name.value,this.state.controls.password.value,this.state.isSignup)
     }
 
     render(){
@@ -73,8 +81,9 @@ class Auth extends Component{
                 value={formElement.config.value}
                 invalid={!formElement.config.valid}
                 shouldValidate={formElement.config.validation}
-                touched={formElement.config.touched}
-                changed={(event)=> this.inputChangedHandler(event,formElement.id)}/>
+                focused={formElement.config.focused}
+                changed={(event)=> this.inputChangedHandler(event,formElement.id)}
+                />
         ))
 
         if(this.props.loading){
@@ -94,11 +103,14 @@ class Auth extends Component{
         return (
             <div className="Auth">
                 {authRedirect}
-                <form onSubmit={this.submitHandler}>
+                <form>
                 <h4 className="title">¡Bienvenido!</h4>
                   {form} 
                 {errorMessage}
-                <Button btnType="Success" classes="blue fullwidth">Entrar</Button>
+                <Button 
+                    btnType="Success" 
+                    classes="blue fullwidth"
+                    clicked={(event)=>this.clickHandler(event)}>Entrar</Button>
                 </form>
             </div>
         )

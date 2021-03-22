@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Client from "../../components/Client/Client";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
-
+import Modal from "../../components/Modal/Modal";
 import Spinner from "../../components/Spinner/Spinner"
 
 import * as actions from "../../store/actions/index";
@@ -25,7 +25,7 @@ class Clients extends Component {
           minLength: 3,
         },
         valid: false,
-        touched: false,
+        focused: false,
       },
       last_name: {
         elementType: "input",
@@ -39,7 +39,7 @@ class Clients extends Component {
           minLength: 3,
         },
         valid: false,
-        touched: false,
+        focused: false,
       },
       email: {
         elementType: "input",
@@ -53,7 +53,7 @@ class Clients extends Component {
           isEmail: true,
         },
         valid: false,
-        touched: false,
+        focused: false,
       },
       phone_number: {
         elementType: "input",
@@ -69,13 +69,20 @@ class Clients extends Component {
           isNumber: true
         },
         valid: false,
-        touched: false,
+        focused: false,
       },
     },
-    formIsValid: false,
-    formTitle: "Nuevo Cliente",
-    formBtn: "Crear Nuevo Cliente",
-    personId: null
+    modal: {
+      open: false,
+      removeConfirm: false,
+      newElement: false
+    },
+    form:{
+      isValid: false,
+      title: "Nuevo Cliente",
+      confirmButton: "Crear Nuevo Cliente"
+    },
+    selectedElement: null
   };
 
   componentDidMount = () => {
@@ -87,6 +94,8 @@ class Clients extends Component {
     let formData = {...this.state.controls}
     let title = "Nuevo Cliente"
     let btn = "Crear Nuevo Cliente"
+    let form = {...this.state.form}
+    let modal = {...this.state.modal}
     if(!!id){
       let persons = [ ...this.props.clients];
       let personIndex = persons.findIndex((person) => person.id === id);
@@ -105,30 +114,43 @@ class Clients extends Component {
       }
     }
     
-    let openModal = this.state.openModal;
+    let openModal = this.state.modal.modal;
+    let newElement = this.state.modal.newElement;
+    form.confirmButton = btn;
+    form.title = title;
+    modal.open = !openModal;
+    modal.newElement = !newElement;
+
     this.setState({ 
-      openModal: !openModal, 
+      modal: modal, 
       controls: formData,
-      formBtn: btn,
-      formTitle: title,
-      personId: id
+      form: form,
+      selectedElement: id
     });
   };
 
-  closeModalHandler = () => {
+  closeModalHandler = (event) => {
+    event.preventDefault();
     const updateControls = clearInputs(this.state.controls)
-    this.setState({ openModal: false, updateControls});
+    let modal = {...this.state.modal}
+    modal.open = false;
+    modal.removeConfirm = false;
+    modal.newElement = false;
+    this.setState( {modal: modal, controls: updateControls})
   }
 
   inputChangedHandler = (event, controlName) => {
     const updateControls = inputChanged(this.state.controls, controlName, event.target.value)
     this.setState({controls: updateControls})
   }
+
   addNewClientHandler = (event, id) => {
     event.preventDefault();
     let formData = [];
     const controls = {...this.state.controls}
     let formIsValid = true;
+    let form = {...this.state.form}
+
     for(let formElement in controls){
       if(controls[formElement].valid){
           formData[formElement] = controls[formElement] 
@@ -137,15 +159,14 @@ class Clients extends Component {
         if(formIsValid){
           formData[formElement] = controls[formElement] 
         }else{
-          controls[formElement].touched = true
+          controls[formElement].focused = true
         }
       }
     }
-
     if(!formIsValid){
-      return this.setState({formIsValid: formIsValid, controls: controls})
+      form.isValid = formIsValid
+      return this.setState({form: form, controls: controls})
     }
-
     const order = {
         userData: formData
     }
@@ -162,22 +183,33 @@ class Clients extends Component {
     }else{
       this.props.onFetchUserCreate(newPerson, "clients")
     }
-    this.closeModalHandler()
+    this.closeModalHandler(event)
   };
 
-  removeClientHadler = (id) => {
-    this.props.onFetchUserRemove("clients",id)
+  confirmRemoveHandler = (id) => {
+    let modal = {...this.state.modal}
+    modal.open = true;
+    modal.removeConfirm = true;
+    let form = {...this.state.form}
+    form.title = "¿Está seguro que desea eliminar?"
+    form.confirmButton = "Eliminar"
+    this.setState({ modal: modal, selectedElement: id, form: form})
   };
+  removeHandler = (event, id) => {
+    event.preventDefault();
+    this.props.onFetchUserRemove("clients",id)
+    this.closeModalHandler(event)
+  }
   
   render() {
-    let persons = "";
+    let personsList = "";
     let itemsCount = 0;
     let modal = "";
-    let personId = this.state.personId;
+    let selectedElement = this.state.selectedElement;
 
     if (!!this.props.clients) {
       itemsCount = "Total: " + this.props.clients.length + " clientes";
-      persons = this.props.clients.map((person, index) => (
+      let persons = this.props.clients.map((person, index) => (
         <Client
           key={person.id}
           name={person.name}
@@ -185,53 +217,64 @@ class Clients extends Component {
           email={person.email}
           phone={person.phone_number}
           clickedEdit={(event) =>this.openModalHandler(event,person.id)}
-          clickedRemove={this.removeClientHadler.bind(this, person.id)}
+          clickedRemove={this.confirmRemoveHandler.bind(this, person.id)}
         />
       ));
+      personsList = <div className="list-items top">{persons}</div>
     }
 
     if(this.props.loading){
-      persons = <Spinner/>
+      personsList = <Spinner/>
     }
 
-    if (!!this.state.openModal) {
+    if (this.state.modal.open) {
       const formElementsArray = [];
-      for (let key in this.state.controls) {
-        formElementsArray.push({
-          id: key,
-          config: this.state.controls[key],
-        });
+      let inputs = null;
+      let func;
+
+      if(this.state.modal.newElement){
+        for (let key in this.state.controls) {
+          formElementsArray.push({
+            id: key,
+            config: this.state.controls[key],
+          });
+        }
+  
+        inputs = formElementsArray.map((formElement) => (
+          <Input
+            key={formElement.id}
+            elementType={formElement.config.elementType}
+            elementConfig={formElement.config.elementConfig}
+            value={formElement.config.value}
+            invalid={!formElement.config.valid}
+            shouldValidate={formElement.config.validation}
+            focused={formElement.config.focused}
+            changed={(event) => this.inputChangedHandler(event, formElement.id)}
+          />
+        ));
       }
 
-      const form = formElementsArray.map((formElement) => (
-        <Input
-          key={formElement.id}
-          elementType={formElement.config.elementType}
-          elementConfig={formElement.config.elementConfig}
-          value={formElement.config.value}
-          invalid={!formElement.config.valid}
-          shouldValidate={formElement.config.validation}
-          touched={formElement.config.touched}
-          changed={(event) => this.inputChangedHandler(event, formElement.id)}
-        />
-      ));
+      if(this.state.modal.newElement)
+        func = (event) => this.addNewClientHandler(event, selectedElement)
+      else
+        func = (event) => this.removeHandler(event, selectedElement)
 
       modal = (
-        <div className="modal">
-          <form onSubmit={(event) => this.addNewClientHandler(event, personId)}>
-            <h4 className="title">{this.state.formTitle}</h4>
-            {form}
+        <Modal  
+          title={this.state.form.title}>
+          {inputs}
             <Button 
               btnType="Success" 
-              classes="green fullwidth">{this.state.formBtn}
+              classes="green fullwidth"
+              clicked={func}>
+                {this.state.form.confirmButton}
             </Button>
             <Button 
               btnType="Dismiss" 
               classes="red fullwidth" 
-              clicked={this.closeModalHandler}>Cancelar
+              clicked={(event) => this.closeModalHandler(event)}>Cancelar
             </Button>
-          </form>
-        </div>
+        </Modal>
       );
     }
     
@@ -239,10 +282,10 @@ class Clients extends Component {
       <div className="Clients">
         <div className="row right">
           <Button classes="green" clicked={(event) =>this.openModalHandler(event)}>
-            Nuevo Cliente
+            <i className="new-user inverted big icon"></i>Nuevo Cliente
           </Button>
         </div>
-        <div className="list-items top">{persons}</div>
+        {personsList}
         <div className="count-elements" style={{ textAlign: "right" }}>
           {itemsCount}
         </div>

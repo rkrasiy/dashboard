@@ -12,7 +12,6 @@ const Header = (props) => {
         navLink = <NavLink to="/logout" exact>Logout</NavLink> 
     }
     
-    
     return (
     <header className="Header">
         <div className="column">
@@ -22,7 +21,6 @@ const Header = (props) => {
         <nav>
         {userName}
         <span className="circle inverted"><i className="user big icon"></i></span>
-        
         {navLink}
         </nav>
     </header>

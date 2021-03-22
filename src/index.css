@@ -45,6 +45,7 @@ i.icon:after{
   width: 22px;
   height: 22px;
   background-size: 18px;
+  margin-bottom: -5px;
 }
 i.icon.user:after{
   content:"";
@@ -61,6 +62,26 @@ i.icon.email:after{
 i.user:after{
   content: "";
   background-image: url(../src/assets/icons/user.svg);
+}
+i.new-user:after{
+  content: "";
+  background-image: url(../src/assets/icons/user-plus.svg);
+}
+i.edit-user:after{
+  content: "";
+  background-image: url(../src/assets/icons/user-edit.svg);
+}
+i.trash:after{
+  content: "";
+  background-image: url(../src/assets/icons/trash.svg);
+}
+i.edit:after{
+  content: "";
+  background-image: url(../src/assets/icons/edit-solid.svg);
+}
+i.plus:after{
+  content: "";
+  background-image: url(../src/assets/icons/plus.svg);
 }
 .inverted{
   filter: invert(1);

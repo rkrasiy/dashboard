@@ -3,11 +3,10 @@ import "./Input.css";
 
 
 const input = (props) => {
-    console.log(props)
     let inputElement = null;
     const inputClasses = ["rk-input"]
     
-    if(props.invalid && props.shouldValidate && props.touched)
+    if(props.invalid && props.shouldValidate && props.focused)
         inputClasses.push("invalid")
  
     switch(props.elementtype){
